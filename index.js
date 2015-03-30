@@ -223,6 +223,7 @@ module.exports = function SkipperS3 (globalOpts) {
       var mpu = new S3MultipartUpload({
         objectName: __newFile.fd,
         stream: __newFile,
+        partSize: 1242880,
         maxUploadSize: options.maxBytes,
         tmpDir: options.tmpdir,
         headers: headers,
@@ -235,7 +236,7 @@ module.exports = function SkipperS3 (globalOpts) {
         })
       }, function (err, body) {
         if (err) {
-          console.log(('Receiver: Error writing `' + __newFile.filename + '`:: ' + require('util').inspect(err) + ' :: Cancelling upload and cleaning up already-written bytes...').red);
+          console.error('[skipper-s3] error in S3MultipartUpload:', err);
           receiver__.emit('error', err);
           return;
         }

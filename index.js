@@ -220,13 +220,17 @@ module.exports = function SkipperS3 (globalOpts) {
         console.log('[skipper-s3] Looked up mime:', headers['content-type']);
       }
 
+      console.log('[skipper-s3] options.headers', options.headers):
+
+      var useNoDisk = true; /* if options.headers.size > whatever */
+
       var mpu = new S3MultipartUpload({
         objectName: __newFile.fd,
         stream: __newFile,
-        partSize: 1242880,
         maxUploadSize: options.maxBytes,
         tmpDir: options.tmpdir,
         headers: headers,
+        noDisk: useNoDisk,
         client: knox.createClient({
           key: options.key,
           secret: options.secret,
@@ -236,7 +240,7 @@ module.exports = function SkipperS3 (globalOpts) {
         })
       }, function (err, body) {
         if (err) {
-          console.error('[skipper-s3] error in S3MultipartUpload:', err);
+          console.log(('Receiver: Error writing `' + __newFile.filename + '`:: ' + require('util').inspect(err) + ' :: Cancelling upload and cleaning up already-written bytes...').red);
           receiver__.emit('error', err);
           return;
         }

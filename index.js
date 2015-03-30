@@ -226,6 +226,7 @@ module.exports = function SkipperS3 (globalOpts) {
         maxUploadSize: options.maxBytes,
         tmpDir: options.tmpdir,
         headers: headers,
+        noDisk: true,
         client: knox.createClient({
           key: options.key,
           secret: options.secret,

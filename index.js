@@ -23,7 +23,7 @@ var mime = require('mime');
 module.exports = function SkipperS3 (globalOpts) {
   globalOpts = globalOpts || {};
 
-  // console.log('S3 adapter was instantiated...');
+  console.log('S3 adapter was instantiated...');
 
 
   var adapter = {
@@ -152,7 +152,7 @@ module.exports = function SkipperS3 (globalOpts) {
 
 
 
-          // console.log('______ files _______\n', data);
+          console.log('______ files _______\n', data);
           cb(null, data);
         }));
 
@@ -179,7 +179,7 @@ module.exports = function SkipperS3 (globalOpts) {
    * @return {Stream.Writable}
    */
   function S3Receiver (options) {
-    // console.log('`.receive()` was called...');
+    console.log('`.receive()` was called...');
     options = options || {};
     options = _.defaults(options, globalOpts);
 
@@ -188,7 +188,7 @@ module.exports = function SkipperS3 (globalOpts) {
     });
 
     receiver__.once('error', function (err) {
-      // console.log('ERROR ON RECEIVER__ ::',err);
+      console.log('ERROR ON RECEIVER__ ::',err);
     });
 
     // This `_write` method is invoked each time a new file is received
@@ -199,7 +199,7 @@ module.exports = function SkipperS3 (globalOpts) {
       var startedAt = new Date();
 
       __newFile.once('error', function (err) {
-        // console.log('ERROR ON file read stream in receiver (%s) ::', __newFile.filename, err);
+        console.log('ERROR ON file read stream in receiver (%s) ::', __newFile.filename, err);
         // TODO: the upload has been cancelled, so we need to stop writing
         // all buffered bytes, then call gc() to remove the parts of the file that WERE written.
         // (caveat: may not need to actually call gc()-- need to see how this is implemented
@@ -234,7 +234,7 @@ module.exports = function SkipperS3 (globalOpts) {
         })
       }, function (err, body) {
         if (err) {
-          // console.log(('Receiver: Error writing `' + __newFile.filename + '`:: ' + require('util').inspect(err) + ' :: Cancelling upload and cleaning up already-written bytes...').red);
+          console.log(('Receiver: Error writing `' + __newFile.filename + '`:: ' + require('util').inspect(err) + ' :: Cancelling upload and cleaning up already-written bytes...').red);
           receiver__.emit('error', err);
           return;
         }
@@ -243,13 +243,13 @@ module.exports = function SkipperS3 (globalOpts) {
         // in case we decide we want to use it for something later
         __newFile.extra = body;
 
-        // console.log(('Receiver: Finished writing `' + __newFile.filename + '`').grey);
+        console.log(('Receiver: Finished writing `' + __newFile.filename + '`').grey);
 
 
-        // console.timeEnd('fileupload:'+__newFile.filename);
+        console.timeEnd('fileupload:'+__newFile.filename);
         var endedAt = new Date();
         var duration = ((endedAt - startedAt) / 1000);
-        // console.log('**** S3 upload took '+duration+' seconds...');
+        console.log('**** S3 upload took '+duration+' seconds...');
 
         next();
       });
@@ -259,10 +259,10 @@ module.exports = function SkipperS3 (globalOpts) {
         var snapshot = new Date();
         var secondsElapsed = ((snapshot - startedAt) / 1000);
         var estUploadRate = (data.written/1000) / secondsElapsed;
-        // console.log('Uploading at %dkB/s', estUploadRate);
-        // console.log('Elapsed:',secondsElapsed+'s');
+        console.log('Uploading at %dkB/s', estUploadRate);
+        console.log('Elapsed:',secondsElapsed+'s');
 
-        // console.log('Uploading (%s)..',__newFile.filename, data);
+        console.log('Uploading (%s)..',__newFile.filename, data);
         receiver__.emit('progress', {
           name: __newFile.filename,
           written: data.written,

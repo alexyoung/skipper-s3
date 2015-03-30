@@ -220,7 +220,7 @@ module.exports = function SkipperS3 (globalOpts) {
         console.log('[skipper-s3] Looked up mime:', headers['content-type']);
       }
 
-      console.log('[skipper-s3] options.headers', options.headers):
+      console.log('[skipper-s3] options.headers', options.headers);
 
       var useNoDisk = true; /* if options.headers.size > whatever */
 
